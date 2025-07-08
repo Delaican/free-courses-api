@@ -3,7 +3,7 @@ import json
 import requests
 from httpx import HTTPStatusError, RequestError
 from app.schemas.course import CourseSchema
-
+from datetime import datetime
 
 async def fetch_udemy_courses(
     query: str, lang: str = "EN", num_items: int = 6
@@ -163,6 +163,11 @@ def parse_udemy_response(data: Dict[str, Any]) -> List[Dict[str, Optional[str]]]
             avg_rating = round(rating.get("average"), 1)
             count_rating = rating.get("count")
 
+        course_date = course_data.get("updatedOn", None)
+        if course_date:
+            # Convert to date object
+            course_date = datetime.strptime(course_date, "%Y-%m-%d").date()
+
         course = CourseSchema(
             title=course_data.get("title").strip(),
             url=course_data.get("urlCourseLanding"),
@@ -174,6 +179,7 @@ def parse_udemy_response(data: Dict[str, Any]) -> List[Dict[str, Optional[str]]]
             avg_rating=avg_rating,
             count_rating=count_rating,
             skills=course_data.get("learningOutcomes", None),
+            course_date=course_date
         )
 
         results.append(course)

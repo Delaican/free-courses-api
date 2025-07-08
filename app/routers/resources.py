@@ -20,6 +20,9 @@ router = APIRouter(prefix="/resources", tags=["courses"])
 # TODO: Establish display order for platforms based on type of course
 # and language, e.g., prioritize YouTube for Spanish courses, etc.
 
+# TODO: If a platform returns empty in spanish, suggest results
+# with ai translate or subtitles
+
 @router.get("/courses")
 async def search_courses(
     q: str = Query(..., description="Search term for courses", min_length=1, example="python"),

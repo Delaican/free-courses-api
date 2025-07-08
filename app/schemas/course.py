@@ -1,6 +1,6 @@
 from pydantic import BaseModel, HttpUrl
 from typing import Optional, List
-
+from datetime import date
 
 class CourseSchema(BaseModel):
     """Normalized course schema for all platforms"""
@@ -18,6 +18,7 @@ class CourseSchema(BaseModel):
     avg_rating: Optional[float] = None
     count_rating: Optional[int] = None
     skills: Optional[List[str]] = None
+    course_date: Optional[date] = None
 
     class Config:
         # Example for documentation
@@ -32,9 +33,12 @@ class CourseSchema(BaseModel):
                 "difficulty": "beginner",
                 "avg_rating": 4.5,
                 "count_rating": 1500,
-                "skills": ["Python", "Data Analysis", "Pandas"]
+                "skills": ["Python", "Data Analysis", "Pandas"],
+                "course_date": "2025-02-15"
             }
         }
+
+# TODO: Apply extra fields
 
 
 class PlatformResponse(BaseModel):

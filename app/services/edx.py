@@ -4,6 +4,7 @@ import httpx
 from httpx import TimeoutException, RequestError, HTTPStatusError
 import asyncio
 from app.schemas.course import CourseSchema
+from datetime import datetime
 
 # Constants
 DEFAULT_TIMEOUT = 15.0
@@ -50,7 +51,8 @@ def build_edx_request_body(query: str, language: str, num_items: int) -> Dict[st
                 "clickAnalytics": False,
                 "facetFilters": [
                     ["availability:Available now"],
-                    [f"language:{language}"]
+                    [f"language:{language}"],
+                    ["learning_type:Course"]
                 ],
                 "facets": [
                     "availability",
@@ -64,8 +66,8 @@ def build_edx_request_body(query: str, language: str, num_items: int) -> Dict[st
                 ],
                 "filters": (
                     '(product:"Course" OR product:"Program" OR product:"Executive Education" OR product:"2U Degree") '
-                    'AND (blocked_in:null OR NOT blocked_in:"CO") '
-                    'AND (allowed_in:null OR allowed_in:"CO")'
+                    'AND (blocked_in:null) '
+                    'AND (allowed_in:null)'
                 ),
                 "hitsPerPage": min(num_items, MAX_ITEMS_LIMIT),
                 "maxValuesPerFacet": 100,
@@ -199,6 +201,11 @@ def parse_edx_response(data: Dict[str, Any]) -> List[Dict[str, Any]]:
                 if skills:
                     skills = [item.get('skill') for item in skills]
 
+                # Get UNIX timestamp
+                course_date = item.get("active_run_start", None)
+                if course_date:
+                    course_date = datetime.utcfromtimestamp(course_date).date()
+
                 # Build course object
                 course = CourseSchema(
                     title=item.get("title").strip(),
@@ -211,6 +218,7 @@ def parse_edx_response(data: Dict[str, Any]) -> List[Dict[str, Any]]:
                     avg_rating=None,
                     count_rating=None,
                     skills=skills,
+                    course_date=course_date
                 )
 
                 courses.append(course)

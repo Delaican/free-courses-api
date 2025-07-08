@@ -7,6 +7,7 @@ from googleapiclient.errors import HttpError
 import asyncio
 from functools import lru_cache
 from app.schemas.course import CourseSchema
+from datetime import datetime
 
 load_dotenv()
 
@@ -15,7 +16,6 @@ load_dotenv()
 # More info: https://developers.google.com/youtube/registering_an_application
 # Once you have the API key, you can create a `.env` file in the root of your project with the following content:
 # API_KEY=your_youtube_api_key_here
-# TODO: Change this module for another that don't require an API key
 
 API_KEY = os.getenv("API_KEY")
 DEFAULT_NUM_ITEMS = 6
@@ -186,6 +186,10 @@ def parse_youtube_response(data: Dict[str, Any]) -> List[Dict[str, Any]]:
             if duration:
                 duration = convert_youtube_duration(duration)
 
+            publish_date_str = snippet.get('publishedAt', None)
+            if publish_date_str:
+                publish_date = datetime.fromisoformat(publish_date_str).date()
+            
             video = CourseSchema(
                 title=snippet.get("title").strip(),
                 url=f"https://youtube.com/watch?v={video_id}",
@@ -197,6 +201,7 @@ def parse_youtube_response(data: Dict[str, Any]) -> List[Dict[str, Any]]:
                 avg_rating=None,
                 count_rating=None,
                 skills=None,
+                course_date=publish_date
             )
 
             videos.append(video)

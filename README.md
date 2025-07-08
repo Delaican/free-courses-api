@@ -28,6 +28,8 @@ pip install -r requirements.txt
 # Setup environment
 echo "API_KEY = youtube_API_key" >> .env
 # Add your youtube API key to .env
+# To get an API key, you need to create a project in the Google Developer Console and enable the YouTube Data API v3.
+# More info: https://developers.google.com/youtube/registering_an_application
 
 # Run
 python3 -m app.main

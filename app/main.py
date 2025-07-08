@@ -20,8 +20,6 @@ app.add_middleware(
 # Incluir routers
 app.include_router(resources.router)
 
-# TODO: Add documentation for each platform
-
 # Endpoint base
 
 

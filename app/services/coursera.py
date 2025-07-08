@@ -62,10 +62,10 @@ async def fetch_coursera_courses(
                     {
                         "entityType": "PRODUCTS",
                         "limit": num_items,
-                        "facets": ["topic", "language"],
+                        "facets": ["topic", "language", "productTypeDescription"],
                         "sortBy": "BEST_MATCH",
                         "maxValuesPerFacet": 1000,
-                        "facetFilters": [[f"language:{lang}", "price:Free"]],
+                        "facetFilters": [[f"language:{lang}", "price:Free", "productTypeDescription:Courses"]],
                         "cursor": "0",
                         "query": query,
                     }
@@ -162,7 +162,8 @@ def parse_coursera_response(data: Dict[str, Any]) -> List[Dict[str, Optional[str
             difficulty=difficulty,
             avg_rating=avg_rating,
             count_rating=item.get('numProductRatings'),
-            skills=item.get('skills', None)
+            skills=item.get('skills', None),
+            course_date=None
         )
 
         results.append(course)
