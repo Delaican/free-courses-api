@@ -186,20 +186,23 @@ def parse_edx_response(data: Dict[str, Any]) -> List[Dict[str, Any]]:
         for item in hits:
             try:
                 # Extract provider data
-                owner = item.get("owners", [])
+                owner = item.get("owners", None)
                 if owner:
                     provider = owner[0].get("name", None)
                     provider_img = owner[0].get("logoImageUrl", None)
                 else:
                     provider = None
+                    provider_img = None
 
                 duration = item.get('weeks_to_complete', None)
                 if duration:
                     duration = f"{duration} weeks"
 
-                skills = item.get("skills", None)
-                if skills:
+                skills = item.get("skills", ["null"])
+                if skills[0] != "null":
                     skills = [item.get('skill') for item in skills]
+                else:
+                    skills = None
 
                 # Get UNIX timestamp
                 course_date = item.get("active_run_start", None)

@@ -17,6 +17,18 @@ git clone https://github.com/Delaican/free-courses-api.git
 
 cd free-courses-api
 
+# Setup environment
+echo "API_KEY=youtube_API_key" >> .env
+# Add your youtube API key to .env
+# To get an API key, you need to create a project in the Google Developer Console and enable the YouTube Data API v3.
+# More info: https://developers.google.com/youtube/registering_an_application
+```
+
+After setting up the project, you can either run it with a virtual environment or with Docker.
+
+### With virtual environment
+
+```bash
 # Create and activate virtual environment
 python3 -m venv .venv
 
@@ -25,16 +37,17 @@ source .venv/bin/activate
 # Install
 pip install -r requirements.txt
 
-# Setup environment
-echo "API_KEY = youtube_API_key" >> .env
-# Add your youtube API key to .env
-# To get an API key, you need to create a project in the Google Developer Console and enable the YouTube Data API v3.
-# More info: https://developers.google.com/youtube/registering_an_application
-
 # Run
 python3 -m app.main
 ```
 
+### With Docker
+
+```bash
+sudo docker build -t free-courses-api .
+
+sudo docker run --env-file .env -p 8000:8000 free-courses-api
+```
 ## API Call Example
 
 ```
